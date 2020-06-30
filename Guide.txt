@@ -1,0 +1,129 @@
+
+############### Installation
+
+install python 3.6.2 64-bit version or Newest Version
+run this command : pip3 install tensorflow==1.14
+				 : pip3 install tensorflow-gpu==1.14 (Best stable)	(May be visual C++ 2015 v3 update required)
+install cuda 10 
+Download cudNN from Nvidia after Login.
+copy contents of cuDNN 10 to C:\Program Files\NVIDIA GPU Computing Toolkit. Mine is cudNN v11.
+You might need other cudNN downloads to copy-paste dll files.
+
+You may find several missing dll. Just find them on internet or go to C:\Program Files\NVIDIA GPU Computing Toolkit
+Find the similar dll and rename it.
+
+This is the chart to make accurate versioning between tensorflow GPU, cuda and cudNN
+
+https://stackoverflow.com/questions/50622525/which-tensorflow-and-cuda-version-combinations-are-compatible
+https://www.tensorflow.org/install/source#tested_build_configurations
+
+############### Check TensorFlow
+
+To check if your GPU is enlisted:
+
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 0 = GPU use; -1 = CPU use
+from tensorflow.python.client import device_lib
+print(device_lib.list_local_devices())
+
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+
+Tutorial: https://medium.com/@liyin2015/tensorflow-cpus-and-gpus-configuration-9c223436d4ef
+
+
+
+############### Check Keras
+
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 0 = GPU use; -1 = CPU use
+
+import keras
+import tensorflow as tf
+
+config = tf.compat.v1.ConfigProto( device_count = {'GPU': 1 , 'CPU': 3} )
+sess = tf.compat.v1.Session(config=config)
+keras.backend.set_session(sess)
+
+
+--- Important
+
+If you face problem with 'import keras.something' convert it to
+'tensorflow.python.keras.something'
+
+
+################ Version check TensorFlow
+
+import tensorflow as tf
+print(tf.version.VERSION)
+
+
+############### MaskRCNN installation
+
+
+Download MatterPort Github repo on MaskRCNN
+Use it according to your need. Read README.MD
+
+Tutorial Link: https://www.youtube.com/watch?v=GSDbfGsxruA&t=174s
+
+
+################ PycocoTools
+
+Most cruicial. No good update for windows 10.
+Visit here https://github.com/philferriere/cocoapi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
