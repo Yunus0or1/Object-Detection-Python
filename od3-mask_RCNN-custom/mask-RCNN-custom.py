@@ -39,7 +39,7 @@ matplotlib.use('TkAgg')
 # COCO Class names
 # Index of the class in the list is its ID. For example, to get ID of
 # the teddy bear class, use: class_names.index('teddy bear')
-class_names = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
+class_names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'bus', 'train', 'truck', 'boat', 'traffic light',
                'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird',
                'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear',
@@ -55,19 +55,20 @@ class_names = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
                'teddy bear', 'hair drier', 'toothbrush']
 
-colors = random_colors(len(class_names))
-class_dict = {
-    name: color for name, color in zip(class_names, colors)
-}
 
 
 COCO_MODEL_URL = "https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5"
+
+
 
 # Directory to save logs and trained model
 MODEL_DIR = os.path.join("logs")
 
 # Local path to trained weights file
 COCO_MODEL_PATH = os.path.join("mask_rcnn_coco.h5")
+
+if not os.path.exists(COCO_MODEL_PATH):
+    utils.download_trained_weights(COCO_MODEL_PATH)
 
 
 
@@ -103,6 +104,8 @@ class CustomConfig(coco.CocoConfig):
     # Matterport originally used resnet101, but I downsized to fit it on my graphics card
     BACKBONE = 'resnet50'
 
+    DETECTION_MIN_CONFIDENCE = 0.6
+
     # To be honest, I haven't taken the time to figure out what these do
     RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
     TRAIN_ROIS_PER_IMAGE = 32
@@ -136,7 +139,6 @@ class CocoLikeDataset(utils.Dataset):
             images_dir: The directory holding the images referred to by the json file
         """
         # Load json from file
-        print(images_dir)
         json_file = open(annotation_json)
         coco_json = json.load(json_file)
         json_file.close()
@@ -146,7 +148,10 @@ class CocoLikeDataset(utils.Dataset):
         for category in coco_json['categories']:
             class_id = category['id']
             class_name = category['name']
-
+            if class_id < 1:
+                print('Error: Class id for "{}" cannot be less than one. (0 is reserved for the background)'.format(
+                    class_name))
+                return
 
             self.add_class(source_name, class_id, class_name)
 
@@ -186,6 +191,13 @@ class CocoLikeDataset(utils.Dataset):
                     annotations=image_annotations
                 )
 
+        # Adding the rest COCO classed
+        # for i in range(0,len(class_names)):
+        #     self.add_class(class_names[i], i + len(self.class_info), class_names[i])
+        #     #i + len(self.class_info) means after adding my class and BackGround Class
+        #
+        # print("Total Classes: ",len(self.class_info))
+
     def load_mask(self, image_id):
         """ Load instance masks for the given image.
         MaskRCNN expects masks in the form of a bitmap [height, width, instances].
@@ -203,27 +215,19 @@ class CocoLikeDataset(utils.Dataset):
 
         for annotation in annotations:
             class_id = annotation['category_id']
-
             mask = Image.new('1', (image_info['width'], image_info['height']))
-
             mask_draw = ImageDraw.ImageDraw(mask, '1')
-
-            bbox = self.get_bounding_boxed(annotation['bbox'])
-
-            mask_draw.rectangle(bbox, fill ="#ffff33", outline ="red")
-            bool_array = np.array(mask)
-            instance_masks.append(bool_array)
-            class_ids.append(class_id)
-
+            for segmentation in annotation['segmentation']:
+                mask_draw.polygon(segmentation, fill=1)
+                bool_array = np.array(mask) > 0
+                instance_masks.append(bool_array)
+                class_ids.append(class_id)
 
         mask = np.dstack(instance_masks)
         class_ids = np.array(class_ids, dtype=np.int32)
 
         return mask, class_ids
 
-    def get_bounding_boxed(self,annotation):
-        x,y,w,h = annotation
-        return [x,y-h,x+w,y]
 
 def download_trained_weights(coco_model_path, verbose=1):
     if verbose > 0:
@@ -232,49 +236,6 @@ def download_trained_weights(coco_model_path, verbose=1):
         shutil.copyfileobj(resp, out)
     if verbose > 0:
         print("... done downloading pretrained model!")
-
-
-def apply_mask(image, mask, color, alpha=0.5):
-    """apply mask to image"""
-    for n, c in enumerate(color):
-        image[:, :, n] = np.where(
-            mask == 1,
-            image[:, :, n] * (1 - alpha) + alpha * c,
-            image[:, :, n]
-        )
-    return image
-
-
-def display_instances(image, boxes, masks, ids, names, scores):
-
-    """
-        take the image and results and apply the mask, box, and Label
-    """
-    n_instances = boxes.shape[0]
-
-    if not n_instances:
-        print('NO INSTANCES TO DISPLAY')
-    else:
-        assert boxes.shape[0] == masks.shape[-1] == ids.shape[0]
-
-    for i in range(n_instances):
-        if not np.any(boxes[i]):
-            continue
-
-        y1, x1, y2, x2 = boxes[i]
-        label = names[ids[i]]
-        color = class_dict[label]
-        score = scores[i] if scores is not None else None
-        caption = '{} {:.2f}'.format(label, score) if score else label
-        mask = masks[:, :, i]
-
-        image = apply_mask(image, mask, color)
-        image = cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
-        image = cv2.putText(
-            image, caption, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 0.7, color, 2
-        )
-
-    return image
 
 
 def load_data():
@@ -287,19 +248,16 @@ def load_data():
     dataset_val.load_data('valid/coco_annotations.json', 'valid/images')
     dataset_val.prepare()
 
-
     return dataset_train,dataset_val
 
 
 def show_data():
-    dataset = load_data()
-    image_ids = np.random.choice(dataset.image_ids, 1)
-
+    dataset_train,dataset_val = load_data()
+    image_ids = np.random.choice(dataset_train.image_ids, 4)
     for image_id in image_ids:
-        image = dataset.load_image(image_id)
-        cv2.imshow('image', image)
-        mask, class_ids = dataset.load_mask(image_id)
-        visualize.display_top_masks(image, mask, class_ids, dataset.class_names)
+        image = dataset_train.load_image(image_id)
+        mask, class_ids = dataset_train.load_mask(image_id)
+        visualize.display_top_masks(image, mask, class_ids, dataset_train.class_names)
 
 
 
@@ -335,7 +293,7 @@ def train_model():
 
     start_train = time.time()
     model.train(dataset_train, dataset_val,
-                learning_rate=2*config.LEARNING_RATE,
+                learning_rate=config.LEARNING_RATE,
                 epochs=6,
                 layers='heads')
     end_train = time.time()
@@ -344,6 +302,9 @@ def train_model():
 
     print("Saving model")
     model.keras_model.save_weights('mask_rcnn_headlights.h5')
+
+    return dataset_train
+
 
 def load_pretrained_model():
     # Directory to save logs and trained model
@@ -360,19 +321,29 @@ def load_pretrained_model():
     model.load_weights(COCO_MODEL_PATH, by_name=True)
     return model
 
-def predict_static_image(model):
-    file_name = 'test2.jpg'
+
+def predict_static_image(model,dataset):
+    file_name = 'test.jpg'
     image = skimage.io.imread(file_name)
-    cv2.imshow('image', image)
     # Run detection
     results = model.detect([image], verbose=1)
 
     # Visualize results
     r = results[0]
+
+    print(r['rois'], r['masks'], r['class_ids'],
+                                dataset.class_names, r['scores'])
     visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                                class_names, r['scores'])
+                                dataset.class_names, r['scores'])
 
 
-# train_model()
+
+# show_data()
+
+dataset_train = train_model()
+print("Dataset Class Names")
+print(dataset_train.class_names)
+
 model = load_pretrained_model()
-predict_static_image(model)
+predict_static_image(model,dataset_train)
+
