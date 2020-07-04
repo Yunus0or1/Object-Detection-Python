@@ -241,11 +241,11 @@ def download_trained_weights(coco_model_path, verbose=1):
 def load_data():
 
     dataset_train = CocoLikeDataset()
-    dataset_train.load_data('train/coco_annotations.json', 'train/images')
+    dataset_train.load_data('train/trainval.json', 'train/images')
     dataset_train.prepare()
 
     dataset_val = CocoLikeDataset()
-    dataset_val.load_data('valid/coco_annotations.json', 'valid/images')
+    dataset_val.load_data('valid/trainval.json', 'valid/images')
     dataset_val.prepare()
 
     return dataset_train,dataset_val
@@ -322,28 +322,27 @@ def load_pretrained_model():
     return model
 
 
-def predict_static_image(model,dataset):
-    file_name = 'test.jpg'
+def predict_static_image(image_name):
+    model = load_pretrained_model()
+    dataset_train,dataset_valid  = load_data()
+
+    file_name = image_name
     image = skimage.io.imread(file_name)
     # Run detection
     results = model.detect([image], verbose=1)
 
     # Visualize results
     r = results[0]
-
-    print(r['rois'], r['masks'], r['class_ids'],
-                                dataset.class_names, r['scores'])
     visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                                dataset.class_names, r['scores'])
+                                dataset_train.class_names, r['scores'])
 
 
 
 # show_data()
 
-dataset_train = train_model()
-print("Dataset Class Names")
-print(dataset_train.class_names)
+# dataset_train = train_model()
+# print("Dataset Class Names")
+# print(dataset_train.class_names)
 
-model = load_pretrained_model()
-predict_static_image(model,dataset_train)
+predict_static_image("test/test3.jpg")
 

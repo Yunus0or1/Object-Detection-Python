@@ -80,7 +80,7 @@ class labelme2coco(object):
     def category(self, label):
         category = {}
         category["supercategory"] = label[0]
-        category["id"] = len(self.categories) + len(class_names) + 1
+        category["id"] = len(self.categories)  + 1
         category["name"] = label[0]
         return category
 
