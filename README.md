@@ -40,7 +40,25 @@ if tf.test.gpu_device_name():
 else:
     print("No GPU found")
 ```
-[Medium](https://medium.com/@liyin2015/tensorflow-cpus-and-gpus-configuration-9c223436d4ef)
+[Tutorial from Medium](https://medium.com/@liyin2015/tensorflow-cpus-and-gpus-configuration-9c223436d4ef)
+
+
+# Check Keras
+
+```Python
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 0 = GPU use; -1 = CPU use
+
+import keras
+import tensorflow as tf
+
+config = tf.compat.v1.ConfigProto( device_count = {'GPU': 1 , 'CPU': 3} )
+sess = tf.compat.v1.Session(config=config)
+keras.backend.set_session(sess)
+```
+
+>If you face problem with 'import keras.something' convert it to'tensorflow.python.keras.something'
+
 
 
 
