@@ -6,8 +6,8 @@ This repo contains projects on implementaion of different object detection algor
   - Install python 3.6.2 64-bit version or Newest Version
   - Run these command : 
           ```
-          pip3 install tensorflow==1.14
-				  pip3 install tensorflow-gpu==1.14 (***Best stabl but visual C++ 2015 v3 update required***)
+          	- pip3 install tensorflow==1.14
+		- pip3 install tensorflow-gpu==1.14 (***Best stabl but visual C++ 2015 v3 update required***)
           ```
           
 install cuda 10 
