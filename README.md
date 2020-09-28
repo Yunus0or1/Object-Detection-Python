@@ -18,6 +18,6 @@ This repo contains projects on implementaion of different object detection algor
 
 **This is the chart to make accurate versioning between tensorflow GPU, cuda and cudNN**
 
-![StackOverFlow](https://stackoverflow.com/questions/50622525/which-tensorflow-and-cuda-version-combinations-are-compatible)
-![TensorFlow](https://www.tensorflow.org/install/source#tested_build_configurations)
+>[StackOverFlow](https://stackoverflow.com/questions/50622525/which-tensorflow-and-cuda-version-combinations-are-compatible)
+>[TensorFlow](https://www.tensorflow.org/install/source#tested_build_configurations)
 
