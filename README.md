@@ -60,6 +60,19 @@ keras.backend.set_session(sess)
 >If you face problem with 'import keras.something' convert it to'tensorflow.python.keras.something'
 
 
+# TensorFlow Version check 
+
+```Python
+import tensorflow as tf
+print(tf.version.VERSION)
+```
+
+# MaskRCNN installation
+
+Download MatterPort Github repo on MaskRCNN
+Use it according to your need. Read README.MD
+
+[Tutorial Link from YouTube](https://www.youtube.com/watch?v=GSDbfGsxruA&t=174s)
 
 
 
