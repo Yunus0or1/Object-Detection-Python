@@ -21,3 +21,32 @@ This repo contains projects on implementaion of different object detection algor
 >[StackOverFlow](https://stackoverflow.com/questions/50622525/which-tensorflow-and-cuda-version-combinations-are-compatible)
 >[TensorFlow](https://www.tensorflow.org/install/source#tested_build_configurations)
 
+
+# Check TensorFlow
+
+To check if your GPU is enlisted:
+
+```Python
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # 0 = GPU use; -1 = CPU use
+from tensorflow.python.client import device_lib
+print(device_lib.list_local_devices())
+
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+```
+
+
+
+
+
+
+
+
+
