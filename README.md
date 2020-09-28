@@ -86,4 +86,9 @@ Use it according to your need. Read README.MD
 >[Convert to Coco Format](https://medium.com/datadriveninvestor/how-to-create-custom-coco-data-set-for-instance-segmentation-68dbfc988b56)
 
 
+___
+Project Explanation
+___
+
+
 
