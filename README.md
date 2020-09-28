@@ -87,7 +87,7 @@ Use it according to your need. Read README.MD
 
 
 ___
-Project Explanation
+**Project Explanation**
 ___
 
 
