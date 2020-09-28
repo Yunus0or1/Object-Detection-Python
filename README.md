@@ -81,9 +81,9 @@ Use it according to your need. Read README.MD
 
 # Resources
 
-[Yolov3](https://github.com/ultralytics)
-[Yolov3 Tutorial with direct weight](https://www.youtube.com/channel/UCtfTf1nNJQ4PbUDqj-Q48rw)
-[Convert to Coco Format](https://medium.com/datadriveninvestor/how-to-create-custom-coco-data-set-for-instance-segmentation-68dbfc988b56)
+>[Yolov3](https://github.com/ultralytics)
+>[Yolov3 Tutorial with direct weight](https://www.youtube.com/channel/UCtfTf1nNJQ4PbUDqj-Q48rw)
+>[Convert to Coco Format](https://medium.com/datadriveninvestor/how-to-create-custom-coco-data-set-for-instance-segmentation-68dbfc988b56)
 
 
 
