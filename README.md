@@ -40,8 +40,7 @@ if tf.test.gpu_device_name():
 else:
     print("No GPU found")
 ```
-
-
+[Medium](https://medium.com/@liyin2015/tensorflow-cpus-and-gpus-configuration-9c223436d4ef)
 
 
 
