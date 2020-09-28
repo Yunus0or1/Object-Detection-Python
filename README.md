@@ -4,14 +4,13 @@ This repo contains projects on implementaion of different object detection algor
 # Installation
 
   - Install python 3.6.2 64-bit version or Newest Version
-  - Run these command : 
+  - Run these commands : 
     ```
     - pip3 install tensorflow==1.14
-    - pip3 install tensorflow-gpu==1.14 (***Best stabl but visual C++ 2015 v3 update required***)
+    - pip3 install tensorflow-gpu==1.14 (Stable but visual C++ 2015 v3 update required)
     ```
-          
-install cuda 10 
-Download cudNN from Nvidia after Login.
+ - Install cuda 10 
+ - Download cudNN from Nvidia after Login.
 copy contents of cuDNN 10 to C:\Program Files\NVIDIA GPU Computing Toolkit. Mine is cudNN v11.
 You might need other cudNN downloads to copy-paste dll files.
 
