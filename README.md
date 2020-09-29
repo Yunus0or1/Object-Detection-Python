@@ -90,7 +90,8 @@ ___
 **Project Explanation**
 ___
 
-A very details guideline on using Mask-RCNN is published in [Medium](https://medium.com/@ahmedyunuspilot/mask-rcnn-on-custom-coco-like-dataset-on-windows-machine-7e219b6a1fc3)
+A very details guideline on Mask-RCNN is published in [Medium](https://medium.com/@ahmedyunuspilot/mask-rcnn-on-custom-coco-like-dataset-on-windows-machine-7e219b6a1fc3) by the Author **Ahmed Yunus**.
+
 However to understand YOLO, this [link](https://machinelearningmastery.com/how-to-perform-object-detection-with-yolov3-in-keras/) is referred. 
 
 
