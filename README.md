@@ -94,4 +94,6 @@ A very details guideline on Mask-RCNN is published in [Medium](https://medium.co
 
 However to understand YOLO, this [link](https://machinelearningmastery.com/how-to-perform-object-detection-with-yolov3-in-keras/) is referred. 
 
+The codes are self explanatory. The function names are completely aligned with what those are meant to do. 
+
 
